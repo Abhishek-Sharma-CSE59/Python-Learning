@@ -85,3 +85,58 @@ def extract_keywords_tfidf(text,top_n=10):
 text = "this is an example text. this text is about keyword extraction. Keyword , Keywords extraction"
 keywords = extract_keywords_tfidf(text)
 print("Keywords (TF-IDF):", keywords)
+
+
+
+
+
+import spacy
+import re
+import string
+
+nlp = spacy.load("en_core_web_sm",disable = ["parser","near"]) # it will disable parser and ner for speed if not needed
+
+def preprocess_batch(texts):
+    cleaned_texts = []
+    for text in texts:
+        text = re.sub(r"<.*?>"," ",text)
+        text = re.sub(r"&amp;","&",text)
+        text = re.sub(r"[^\x00-\x7F]+"," ",text)
+        text = text.replace('\n',' ').replace('\t',' ')
+        text = re.sub(r'\s+',' ',text).strip()
+        punctuation = str.maketrans('','',string.punctuation)
+        text = text.translate(punctuation)
+        cleaned_texts.append(text)
+    docs = list(nlp.pipe(cleaned_texts))
+    preprocessed_text = []
+    for doc in docs:
+        filtered_tokens = [token.lemma_.lower() for token in doc if not token.is_stop and not token.is_punct]
+        preprocessed_text.append(filtered_tokens)
+
+    return preprocessed_text
+
+
+text = "this is a sample text for testing the sample and sample."
+
+
+preprocessed_text = preprocess_batch(text)
+for i, text in enumerate(preprocessed_text):
+    print(f"Preprocessed text {i+1}: {text}")
+
+
+
+# using spacy wit pos tag filtering
+
+from collections import Counter
+
+def extract_keywords_from_preprocessed(preprocessed_texts, top_n=10):
+    all_keywords = []
+    for text in preprocessed_texts:
+        word_counts = Counter(text)
+        keywords = word_counts.most_common(top_n)
+        all_keywords.append(keywords)
+    return all_keywords
+
+keywords = extract_keywords_from_preprocessed(preprocessed_text)
+for i, text in enumerate(keywords):
+    print(f"Keywords for text {i+1}: {text}")
