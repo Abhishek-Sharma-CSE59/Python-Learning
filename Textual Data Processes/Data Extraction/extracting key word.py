@@ -47,7 +47,7 @@ def extract_keywords_spacy(text,top_n=10):
     word_counts = Counter(keywords)
     return word_counts.most_common(top_n)
 
-text = "this is an example text. this text is about keyword extraction. Keyword , Keywords extraction"
+text = "this is an example text. this text is about keyword extraction. Keyword , Keywords extraction "
 keywords = extract_keywords_spacy(text)
 print("After spaCy : ", keywords)
 
