@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask form Example</title>
+</head>
+<body>
+    <h1>Enter Text</h1>
+    <form method="POST">
+        <input type="text" name="user_input" value="{{input}}"><br><br>
+        <input type="submit" value="submit">
+    </form>
+
+    {% if result %}
+        <h2>Processed Result :</h2>
+        <p>{{result}}</p>
+    {% endif %}
+
+    {% if error %}
+        <p style="color:red">{{error}}</p>
+    {% endif %}
+</body>
+</html>
